@@ -10,7 +10,7 @@ from PyQt5 import uic  # Импортируем uic
 from PyQt5.QtWidgets import *
 import sys
 
-ACCESS_TOKEN = "9dc661b59dc661b59dc661b58b9db280db99dc69dc661b5c26ab527437c663b04510a38"
+ACCESS_TOKEN = "****61b59d****b59d****b58b9*b280db99dc69dc661b5c26ab527****************"
 
 
 def double_exponentional_smoothing(series, alpha, beta):  # двойное экспоненциальное сглаживание
@@ -59,7 +59,6 @@ class Group:
                 self.comms.append(j["comments"]["count"])
                 self.data.append(j["date"])
             offset += 100
-            # print(time.time() - last)
             last = time.time()
 
         self.ls.reverse()  # реверс массивов, чтобы на графике данные отображались в человеческом виде
@@ -68,9 +67,6 @@ class Group:
         self.data.reverse()
 
     def statistic(self, time_from, time_to):  # метод, находящий статистику сообщества
-        # self.owner_id = -int(input())
-        # time_from = input().split(".")
-        # time_to = input().split(".")
 
         d = date(int(time_from[-1]), int(time_from[1]), int(time_from[0]))
         time_from_numb = time.mktime(d.timetuple())
@@ -82,7 +78,6 @@ class Group:
         comms_pr = []
         reps_pr = []
         activnost = []
-        wts = [0.99, 0.5, 0.5]
 
         time_from_numb = bisect_left(self.data, time_from_numb)  # поиск ближайшего по значению в массиве элемента
         time_to_numb = bisect_left(self.data, time_to_numb)
@@ -111,8 +106,6 @@ class Group:
         reps = self.reps[time_from_numb:time_to_numb]
         comms = self.comms[time_from_numb:time_to_numb]
 
-        #print('=-=-=-==-=-=-==', ls, self.ls, '\n', time_from_numb, time_to_numb)
-
         ls_pr.append(ls[-1])
         ls_pr.append(round(double_exponentional_smoothing(ls, 0.7, 0.2)))
         data_pr.append(data[-1])
@@ -128,7 +121,7 @@ class Group:
         self.graphic(self.qt.Plot_likes, data, data_pr, ls, ls_pr, 'Likes')
         self.graphic(self.qt.Plot_reposts, data, data_pr, reps, comms_pr, 'Commentaries')
         self.graphic(self.qt.Plot_comms, data, data_pr, comms, reps_pr, 'Reposts')
-        return self.result(round(double_exponentional_smoothing(ls, 0.7, 0.2)))
+        return self.result(round(double_exponentional_smoothing(ls, 0.71, 0.32)))
 
     def graphic(self, window, data, data_pr, mass, mass_pr, name):  # графики, которые выведет программа
         window.clear()
@@ -155,27 +148,5 @@ class Group:
             return (
             'Активность участников вашего сообщества за выбранный период времени уменьшилась на ', 100 - average, ' %',)
 
-
-
 if __name__ == '__main__':
     b = Group()
-
-
-'''fig = go.Figure()
-        fig.add_trace(go.Scatter(x=data, y=mass, name=name,
-                                 line=dict(color=color, width=4)))
-        fig.add_trace(go.Scatter(x=data_pr, y=mass_pr, name=name + ' forecast',
-                                 line=dict(color=color, width=4, dash='dashdot')))
-        fig.update_layout(title=name + ' statistics',
-                          xaxis_title='Time',
-                          yaxis_title='Amount')
-        fig.show()'''
-
-
-# self.owner_id = 184112162
-# self.owner_id = 164252168
-# self.owner_id = 71729358           id групп
-'''
-a = Group(164252168)
-a.statistic([1, 1, 1],[1, 1, 3000])
-'''
